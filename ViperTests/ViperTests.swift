@@ -1,15 +1,14 @@
 //
-//  VIPER_Base_ModuleTests.swift
-//  VIPER Base ModuleTests
+//  ViperTests.swift
+//  ViperTests
 //
-//  Created by Mounir Ybanez on 13/01/2017.
+//  Created by Mounir Ybanez on 03/03/2017.
 //  Copyright © 2017 Ner. All rights reserved.
 //
 
 import XCTest
-@testable import VIPER_Base_Module
 
-class VIPER_Base_ModuleTests: XCTestCase {
+class ViperTests: XCTestCase {
     
     override func setUp() {
         super.setUp()

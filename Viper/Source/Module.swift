@@ -1,12 +1,12 @@
 //
-//  BaseModule.swift
-//  VIPER Base Module
+//  Module.swift
+//  Viper
 //
 //  Created by Mounir Ybanez on 13/01/2017.
 //  Copyright © 2017 Ner. All rights reserved.
 //
 
-public protocol BaseModule: class {
+public protocol Module: class {
     
     var presenter: ModulePresenter! { set get }
     var wireframe: ModuleWireframe! { set get }
@@ -21,28 +21,28 @@ public protocol BaseModule: class {
     associatedtype ModuleScene
 }
 
-public extension BaseModule {
+public extension Module {
     
     func viewDidLoad() { }
 }
 
-public protocol BaseModuleInteractable: class {
+public protocol Interactable: class {
     
     var interactor: ModuleInteractor! { set get }
     
     associatedtype ModuleInteractor
 }
 
-public protocol BaseModuleDelegate: class { }
+public protocol Delegate: class { }
 
-public protocol BaseModuleDelegatable: class {
+public protocol Delegatable: class {
     
     var delegate: ModuleDelegate? { set get }
     
     associatedtype ModuleDelegate
 }
 
-public protocol BaseModuleBuilder: class {
+public protocol Builder: class {
     
     func build(root: RootWireframe?)
 }

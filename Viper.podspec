@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
-    s.name = 'VIPERBaseModule'
+    s.name = 'Viper'
     s.version = '0.0.1'
-    s.summary = 'Base module for VIPER architectur'
+    s.summary = 'Base module for VIPER architecture'
     s.platform = :ios, '9.0'
     s.license = { :type => 'MIT', :file => 'LICENSE' }
     s.homepage = 'https://github.com/mownier/viper-base-module'

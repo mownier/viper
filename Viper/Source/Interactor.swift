@@ -1,6 +1,6 @@
 //
-//  BaseModuleInteractor.swift
-//  VIPER Base Module
+//  Interactor.swift
+//  Viper
 //
 //  Created by Mounir Ybanez on 13/01/2017.
 //  Copyright © 2017 Ner. All rights reserved.
@@ -13,6 +13,6 @@ public protocol BaseModuleInteractor: class {
     associatedtype Output
 }
 
-public protocol BaseModuleInteractorInput: class { }
+public protocol InteractorInput: class { }
 
-public protocol BaseModuleInteractorOutput: class { }
+public protocol InteractorOutput: class { }

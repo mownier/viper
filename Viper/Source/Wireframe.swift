@@ -1,6 +1,6 @@
 //
-//  BaseModuleWireframe.swift
-//  VIPER Base Module
+//  Wireframe.swift
+//  Viper
 //
 //  Created by Mounir Ybanez on 13/01/2017.
 //  Copyright © 2017 Ner. All rights reserved.
@@ -30,10 +30,13 @@ public struct WireframeAttribute {
     public var completion: (() -> Void)?
 }
 
-public protocol BaseModuleWireframe: class {
+public protocol Wireframe: class {
     
     var root: RootWireframe? { set get }
     var style: WireframeStyle { set get }
+    
+    func willEnter(attribute: WireframeAttribute)
+    func willExit(attribute: WireframeAttribute)
     
     func enter(attribute: WireframeAttribute)
     func exit(attribute: WireframeAttribute)
@@ -66,6 +69,13 @@ public protocol Presentable: class {
 public protocol Rootable: class {
     
     func makeRoot(attribute: WireframeAttribute, root: RootWireframe)
+}
+
+extension Wireframe {
+    
+    func willEnter(attribute: WireframeAttribute) { }
+    
+    func willExit(attribute: WireframeAttribute) { }
 }
 
 extension Attachable {
@@ -136,13 +146,23 @@ extension Rootable {
         
         root.window.rootViewController = controller
     }
+    
+    func unroot(attribute: WireframeAttribute, root: RootWireframe) {
+        guard let controller = attribute.controller,
+            root.window.rootViewController == controller else {
+            return
+        }
+        
+        root.window.rootViewController = nil
+    }
 }
 
-extension BaseModuleWireframe {
+extension Wireframe {
     
     public func enter(attribute: WireframeAttribute) {
+        willEnter(attribute: attribute)
+        
         switch style {
-            
         case .push where self is Pushable:
             let this = self as! Pushable
             this.push(attribute: attribute)
@@ -162,15 +182,16 @@ extension BaseModuleWireframe {
         case .custom where self is Customizable:
             let this = self as! Customizable
             this.customEnter(attribute: attribute)
-            
+        
         default:
             break
         }
     }
     
     public func exit(attribute: WireframeAttribute) {
+        willExit(attribute: attribute)
+        
         switch style {
-            
         case .push where self is Pushable:
             let this = self as! Pushable
             this.pop(attribute: attribute)
@@ -183,10 +204,14 @@ extension BaseModuleWireframe {
             let this = self as! Attachable
             this.detach(attribute: attribute)
         
+        case .root where self is Rootable:
+            let this = self as! Rootable
+            this.unroot(attribute: attribute, root: root!)
+            
         case .custom where self is Customizable:
             let this = self as! Customizable
             this.customExit(attribute: attribute)
-           
+        
         default:
             break
         }
