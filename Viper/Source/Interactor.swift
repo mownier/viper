@@ -6,7 +6,7 @@
 //  Copyright © 2017 Ner. All rights reserved.
 //
 
-public protocol BaseModuleInteractor: class {
+public protocol Interactor: class {
 
     var output: Output? { set get }
     
