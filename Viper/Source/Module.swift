@@ -21,11 +21,6 @@ public protocol Module: class {
     associatedtype ModuleScene
 }
 
-public extension Module {
-    
-    func viewDidLoad() { }
-}
-
 public protocol Interactable: class {
     
     var interactor: ModuleInteractor! { set get }
@@ -47,7 +42,13 @@ public protocol Builder: class {
     func build(root: RootWireframe?)
 }
 
-public protocol BaseModuleInterface: class {
+public protocol Arbiter: class {
     
     func exit()
+    func didLoadScene()
+}
+
+public extension Arbiter {
+    
+    func didLoadScene() { }
 }
