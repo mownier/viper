@@ -1,2 +1,2 @@
-# VIPER Base Module
-Skeleton of a VIPER module.
+# Viper
+Skeleton of a Viper module.
