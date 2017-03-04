@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
     s.name = 'Viper'
-    s.version = '0.0.1'
-    s.summary = 'Base module for VIPER architecture'
+    s.version = '1.0'
+    s.summary = 'Skeleton of a Viper module.'
     s.platform = :ios, '9.0'
     s.license = { :type => 'MIT', :file => 'LICENSE' }
-    s.homepage = 'https://github.com/mownier/viper-base-module'
+    s.homepage = 'https://github.com/mownier/viper'
     s.author = { 'Mounir Ybanez' => 'rinuom91@gmail.com' }
-    s.source = { :git =>'https://github.com/mownier/viper-base-module.git', :branch => 'master' }
-    s.source_files = 'VIPER\ Base\ Module/Source/*.swift'
+    s.source = { :git =>'https://github.com/mownier/viper.git', :tag => '1.0' }
+    s.source_files = 'Viper/*.swift'
     s.requires_arc = true
 end
