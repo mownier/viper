@@ -7,6 +7,6 @@ Pod::Spec.new do |s|
     s.homepage = 'https://github.com/mownier/viper'
     s.author = { 'Mounir Ybanez' => 'rinuom91@gmail.com' }
     s.source = { :git =>'https://github.com/mownier/viper.git', :tag => '1.0' }
-    s.source_files = 'Viper/*.swift'
+    s.source_files = 'Viper/Source/*.swift'
     s.requires_arc = true
 end
