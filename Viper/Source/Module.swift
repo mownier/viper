@@ -46,9 +46,21 @@ public protocol Arbiter: class {
     
     func exit()
     func didLoadScene()
+    func didAppearScene()
+    func didDisappearScene()
+    func willAppearScene()
+    func willDisappearScene()
 }
 
 public extension Arbiter {
     
     func didLoadScene() { }
+    
+    func didAppearScene() { }
+    
+    func didDisappearScene() { }
+    
+    func willAppearScene() { }
+    
+    func willDisappearScene() { }
 }
