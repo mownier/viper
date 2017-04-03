@@ -6,9 +6,4 @@
 //  Copyright © 2017 Ner. All rights reserved.
 //
 
-import UIKit
-
-public protocol Scene: class {
-    
-    var controller: UIViewController? { get }
-}
+public protocol Scene: class { }
