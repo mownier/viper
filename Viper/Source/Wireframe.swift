@@ -69,18 +69,19 @@ public protocol Presentable: class {
 public protocol Rootable: class {
     
     func makeRoot(attribute: WireframeAttribute, root: RootWireframe)
+    func unroot(attribute: WireframeAttribute, root: RootWireframe)
 }
 
 extension Wireframe {
     
-    func willEnter(attribute: WireframeAttribute) { }
+    public func willEnter(attribute: WireframeAttribute) { }
     
-    func willExit(attribute: WireframeAttribute) { }
+    public func willExit(attribute: WireframeAttribute) { }
 }
 
 extension Attachable {
     
-    func attach(attribute: WireframeAttribute) {
+    public func attach(attribute: WireframeAttribute) {
         guard let controller = attribute.controller,
             let parent = attribute.parent else {
             return
@@ -91,7 +92,7 @@ extension Attachable {
         controller.didMove(toParentViewController: parent)
     }
     
-    func detach(attribute: WireframeAttribute) {
+    public func detach(attribute: WireframeAttribute) {
         attribute.controller?.view.removeFromSuperview()
         attribute.controller?.removeFromParentViewController()
         attribute.controller?.didMove(toParentViewController: nil)
@@ -100,7 +101,7 @@ extension Attachable {
 
 extension Pushable {
     
-    func push(attribute: WireframeAttribute) {
+    public func push(attribute: WireframeAttribute) {
         guard let controller = attribute.controller,
             let parent = attribute.parent,
             let nav = parent.navigationController else {
@@ -110,7 +111,7 @@ extension Pushable {
         nav.pushViewController(controller, animated: attribute.animated)
     }
     
-    func pop(attribute: WireframeAttribute) {
+    public func pop(attribute: WireframeAttribute) {
         let controller = attribute.controller
         let nav = controller?.navigationController
         let _ = nav?.popViewController(animated: attribute.animated)
@@ -119,7 +120,7 @@ extension Pushable {
 
 extension Presentable {
     
-    func present(attribute: WireframeAttribute) {
+    public func present(attribute: WireframeAttribute) {
         guard let controller = attribute.controller,
             let parent = attribute.parent else {
             return
@@ -130,7 +131,7 @@ extension Presentable {
                        completion: attribute.completion)
     }
     
-    func dismiss(attribute: WireframeAttribute) {
+    public func dismiss(attribute: WireframeAttribute) {
         let controller = attribute.controller
         controller?.dismiss(animated: attribute.animated,
                             completion: attribute.completion)
@@ -139,7 +140,7 @@ extension Presentable {
 
 extension Rootable {
     
-    func makeRoot(attribute: WireframeAttribute, root: RootWireframe) {
+    public func makeRoot(attribute: WireframeAttribute, root: RootWireframe) {
         guard let controller = attribute.controller else {
             return
         }
@@ -147,7 +148,7 @@ extension Rootable {
         root.window.rootViewController = controller
     }
     
-    func unroot(attribute: WireframeAttribute, root: RootWireframe) {
+    public func unroot(attribute: WireframeAttribute, root: RootWireframe) {
         guard let controller = attribute.controller,
             root.window.rootViewController == controller else {
             return
