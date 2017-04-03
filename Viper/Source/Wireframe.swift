@@ -24,10 +24,17 @@ public enum WireframeStyle {
 
 public struct WireframeAttribute {
     
-    public var animated: Bool = true
+    public var animated: Bool
     public var controller: UIViewController?
     public var parent: UIViewController?
     public var completion: (() -> Void)?
+    
+    public init() {
+        animated = true
+        controller = nil
+        parent = nil
+        completion = nil
+    }
 }
 
 public protocol Wireframe: class {
