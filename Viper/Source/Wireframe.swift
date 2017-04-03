@@ -145,7 +145,7 @@ extension Rootable {
             return
         }
         
-        root.window.rootViewController = controller
+        root.window.rootViewController = controller.navigationController ?? controller
     }
     
     public func unroot(attribute: WireframeAttribute, root: RootWireframe) {
