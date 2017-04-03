@@ -79,13 +79,6 @@ public protocol Rootable: class {
     func unroot(attribute: WireframeAttribute, root: RootWireframe)
 }
 
-extension Wireframe {
-    
-    public func willEnter(attribute: WireframeAttribute) { }
-    
-    public func willExit(attribute: WireframeAttribute) { }
-}
-
 extension Attachable {
     
     public func attach(attribute: WireframeAttribute) {
@@ -166,6 +159,10 @@ extension Rootable {
 }
 
 extension Wireframe {
+    
+    public func willEnter(attribute: WireframeAttribute) { }
+    
+    public func willExit(attribute: WireframeAttribute) { }
     
     public func enter(attribute: WireframeAttribute) {
         willEnter(attribute: attribute)
