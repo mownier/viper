@@ -91,8 +91,8 @@
 		B98F29571E694FF900430554 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				B98F29581E694FF900430554 /* Module.swift */,
 				B98F29591E694FF900430554 /* Interactor.swift */,
+				B98F29581E694FF900430554 /* Module.swift */,
 				B98F295A1E694FF900430554 /* Presenter.swift */,
 				B98F295B1E694FF900430554 /* Scene.swift */,
 				B98F295C1E694FF900430554 /* Wireframe.swift */,
@@ -434,6 +434,7 @@
 				B98F298C1E6953F800430554 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B9B870071E28B1EB00059407 /* Build configuration list for PBXProject "Viper" */ = {
 			isa = XCConfigurationList;
