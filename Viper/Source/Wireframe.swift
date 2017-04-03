@@ -22,18 +22,14 @@ public enum WireframeStyle {
     case custom
 }
 
-public struct WireframeAttribute {
+public struct WireframeInfo {
     
-    public var animated: Bool
-    public var controller: UIViewController?
-    public var parent: UIViewController?
-    public var completion: (() -> Void)?
+    public var child: Wireframe?
+    public var parent: Wireframe?
     
     public init() {
-        animated = true
-        controller = nil
+        child = nil
         parent = nil
-        completion = nil
     }
 }
 
@@ -41,49 +37,51 @@ public protocol Wireframe: class {
     
     var root: RootWireframe? { get }
     var style: WireframeStyle { get }
+    var viewController: UIViewController? { get }
+    var animated: Bool { get }
+    var completion: (() -> Void)? { get }
     
-    func willEnter(attribute: WireframeAttribute)
-    func willExit(attribute: WireframeAttribute)
-    
-    func enter(attribute: WireframeAttribute)
-    func exit(attribute: WireframeAttribute)
+    func willEnter(from parent: Wireframe?)
+    func willExit()
+    func enter(from parent: Wireframe?)
+    func exit()
 }
 
 public protocol Customizable: class {
     
-    func customEnter(attribute: WireframeAttribute)
-    func customExit(attribute: WireframeAttribute)
+    func customEnter(info: WireframeInfo)
+    func customExit(info: WireframeInfo)
 }
 
 public protocol Attachable: class {
     
-    func attach(attribute: WireframeAttribute)
-    func detach(attribute: WireframeAttribute)
+    func attach(info: WireframeInfo)
+    func detach(info: WireframeInfo)
 }
 
 public protocol Pushable: class {
     
-    func push(attribute: WireframeAttribute)
-    func pop(attribute: WireframeAttribute)
+    func push(info: WireframeInfo)
+    func pop(info: WireframeInfo)
 }
 
 public protocol Presentable: class {
     
-    func present(attribute: WireframeAttribute)
-    func dismiss(attribute: WireframeAttribute)
+    func present(info: WireframeInfo)
+    func dismiss(info: WireframeInfo)
 }
 
 public protocol Rootable: class {
     
-    func makeRoot(attribute: WireframeAttribute, root: RootWireframe)
-    func unroot(attribute: WireframeAttribute, root: RootWireframe)
+    func makeRoot(info: WireframeInfo)
+    func unroot(info: WireframeInfo)
 }
 
 extension Attachable {
     
-    public func attach(attribute: WireframeAttribute) {
-        guard let controller = attribute.controller,
-            let parent = attribute.parent else {
+    public func attach(info: WireframeInfo) {
+        guard let controller = info.child?.viewController,
+            let parent = info.parent?.viewController else {
             return
         }
         
@@ -92,64 +90,72 @@ extension Attachable {
         controller.didMove(toParentViewController: parent)
     }
     
-    public func detach(attribute: WireframeAttribute) {
-        attribute.controller?.view.removeFromSuperview()
-        attribute.controller?.removeFromParentViewController()
-        attribute.controller?.didMove(toParentViewController: nil)
+    public func detach(info: WireframeInfo) {
+        info.child?.viewController?.view.removeFromSuperview()
+        info.child?.viewController?.removeFromParentViewController()
+        info.child?.viewController?.didMove(toParentViewController: nil)
     }
 }
 
 extension Pushable {
     
-    public func push(attribute: WireframeAttribute) {
-        guard let controller = attribute.controller,
-            let parent = attribute.parent,
+    public func push(info: WireframeInfo) {
+        guard let child = info.child,
+            let controller = child.viewController,
+            let parent = info.parent?.viewController,
             let nav = parent.navigationController else {
             return
         }
         
-        nav.pushViewController(controller, animated: attribute.animated)
+        nav.pushViewController(controller, animated: child.animated)
     }
     
-    public func pop(attribute: WireframeAttribute) {
-        let controller = attribute.controller
-        let nav = controller?.navigationController
-        let _ = nav?.popViewController(animated: attribute.animated)
+    public func pop(info: WireframeInfo) {
+        guard let child = info.child,
+            let nav = child.viewController?.navigationController else {
+            return
+        }
+        
+        let _ = nav.popViewController(animated: child.animated)
     }
 }
 
 extension Presentable {
     
-    public func present(attribute: WireframeAttribute) {
-        guard let controller = attribute.controller,
-            let parent = attribute.parent else {
+    public func present(info: WireframeInfo) {
+        guard let child = info.child,
+            let controller = info.child?.viewController,
+            let parent = info.parent?.viewController else {
             return
         }
         
-        parent.present(controller,
-                       animated: attribute.animated,
-                       completion: attribute.completion)
+        parent.present(controller, animated: child.animated, completion: child.completion)
     }
     
-    public func dismiss(attribute: WireframeAttribute) {
-        let controller = attribute.controller
-        controller?.dismiss(animated: attribute.animated,
-                            completion: attribute.completion)
+    public func dismiss(info: WireframeInfo) {
+        guard let child = info.child,
+            let controller = child.viewController else {
+            return
+        }
+        
+        controller.dismiss(animated: child.animated, completion: child.completion)
     }
 }
 
 extension Rootable {
     
-    public func makeRoot(attribute: WireframeAttribute, root: RootWireframe) {
-        guard let controller = attribute.controller else {
+    public func makeRoot(info: WireframeInfo) {
+        guard let controller = info.child?.viewController,
+            let root = info.child?.root else {
             return
         }
         
         root.window.rootViewController = controller.navigationController ?? controller
     }
     
-    public func unroot(attribute: WireframeAttribute, root: RootWireframe) {
-        guard let controller = attribute.controller,
+    public func unroot(info: WireframeInfo) {
+        guard let controller = info.child?.viewController,
+            let root = info.child?.root,
             root.window.rootViewController == controller else {
             return
         }
@@ -160,63 +166,70 @@ extension Rootable {
 
 extension Wireframe {
     
-    public func willEnter(attribute: WireframeAttribute) { }
+    public func willEnter(from parent: Wireframe?) { }
     
-    public func willExit(attribute: WireframeAttribute) { }
+    public func willExit() { }
     
-    public func enter(attribute: WireframeAttribute) {
-        willEnter(attribute: attribute)
+    public func enter(from parent: Wireframe?) {
+        willEnter(from: parent)
+        
+        var info = WireframeInfo()
+        info.child = self
+        info.parent = parent
         
         switch style {
         case .push where self is Pushable:
             let this = self as! Pushable
-            this.push(attribute: attribute)
+            this.push(info: info)
             
         case .present where self is Presentable:
             let this = self as! Presentable
-            this.present(attribute: attribute)
+            this.present(info: info)
             
         case .attach where self is Attachable:
             let this = self as! Attachable
-            this.attach(attribute: attribute)
+            this.attach(info: info)
             
         case .root where root != nil && self is Rootable:
             let this = self as! Rootable
-            this.makeRoot(attribute: attribute, root: root!)
-        
+            this.makeRoot(info: info)
+            
         case .custom where self is Customizable:
             let this = self as! Customizable
-            this.customEnter(attribute: attribute)
-        
+            this.customEnter(info: info)
+            
         default:
             break
         }
     }
     
-    public func exit(attribute: WireframeAttribute) {
-        willExit(attribute: attribute)
+    public func exit() {
+        willExit()
+        
+        var info = WireframeInfo()
+        info.child = self
         
         switch style {
         case .push where self is Pushable:
             let this = self as! Pushable
-            this.pop(attribute: attribute)
+            this.pop(info: info)
             
         case .present where self is Presentable:
             let this = self as! Presentable
-            this.dismiss(attribute: attribute)
+            this.dismiss(info: info)
             
         case .attach where self is Attachable:
             let this = self as! Attachable
-            this.detach(attribute: attribute)
-        
+            this.detach(info: info)
+            
         case .root where self is Rootable:
             let this = self as! Rootable
-            this.unroot(attribute: attribute, root: root!)
+            this.unroot(info: info)
             
         case .custom where self is Customizable:
             let this = self as! Customizable
-            this.customExit(attribute: attribute)
-        
+            this.customExit(info: info)
+            
         default:
             break
         }
