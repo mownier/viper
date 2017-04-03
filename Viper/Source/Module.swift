@@ -14,8 +14,6 @@ public protocol Module: class {
     
     init(scene: ModuleScene)
     
-    func viewDidLoad()
-    
     associatedtype ModulePresenter
     associatedtype ModuleWireframe
     associatedtype ModuleScene
