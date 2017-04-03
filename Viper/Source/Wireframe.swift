@@ -10,7 +10,7 @@ import UIKit
 
 public protocol RootWireframe: class {
     
-    var window: UIWindow! { set get }
+    var window: UIWindow! { get }
 }
 
 public enum WireframeStyle {
@@ -39,8 +39,8 @@ public struct WireframeAttribute {
 
 public protocol Wireframe: class {
     
-    var root: RootWireframe? { set get }
-    var style: WireframeStyle { set get }
+    var root: RootWireframe? { get }
+    var style: WireframeStyle { get }
     
     func willEnter(attribute: WireframeAttribute)
     func willExit(attribute: WireframeAttribute)
