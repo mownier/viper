@@ -9,8 +9,7 @@
 public protocol Presenter: class {
 
     var scene: ModuleScene! { set get }
-    var wireframe: ModuleWireframe! { set get }
+    var wireframe: Wireframe! { set get }
     
     associatedtype ModuleScene
-    associatedtype ModuleWireframe
 }
