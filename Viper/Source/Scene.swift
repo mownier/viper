@@ -6,4 +6,7 @@
 //  Copyright © 2017 Ner. All rights reserved.
 //
 
-public protocol Scene: class { }
+public protocol Scene: class {
+    
+    func setupArbiter<T: Arbiter>(_ arbiter: T)
+}
